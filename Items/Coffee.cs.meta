@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cb973963b56d4dd4c9b92622d7a07ea5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - GlassEmpty: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  - GlassAmericano: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  - GlassSpanishLatte: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  - GlassEspresso: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
