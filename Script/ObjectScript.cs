@@ -5,7 +5,6 @@ public class ObjectScript : MonoBehaviour, IInteractable
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] public GameObject UseIndicator;
-    public bool playerChecker = false;
     public virtual void onUserIndicator()
     {
         UseIndicator.SetActive(true);

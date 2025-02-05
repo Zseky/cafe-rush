@@ -92,7 +92,7 @@ public class BreweryScript : ObjectScript
 
     void GetCoffeeIndicator()
     {
-        UseIndicator.transform.Find("InteractIndicator").GetComponent<TextMeshPro>().text = "Get Coffee";
+        UseIndicator.transform.Find("InteractIndicator").GetComponent<TextMeshPro>().text = "Get";
     }
     
     void UseIndicatorRevert()

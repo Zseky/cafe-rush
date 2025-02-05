@@ -5,12 +5,12 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
     public float moveSpeed = 5f; // Speed at which the player moves
-
+    public bool canMove = true;
     [SerializeField] Rigidbody2D rb;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        canMove = true;
     }
 
     // Update is called once per frame
@@ -24,12 +24,15 @@ public class PlayerScript : MonoBehaviour
 
     void MoveManager()
     {
+        if (canMove == false) 
+        {
+            rb.linearVelocity = new Vector2(0, 0);
+            return;
+        } 
         float horizontalInput = Input.GetAxis("Horizontal"); // A/D or Left/Right Arrow
         float verticalInput = Input.GetAxis("Vertical");     // W/S or Up/Down Arrow
 
         Vector2 movement = new Vector2(horizontalInput, verticalInput) * moveSpeed;
-
-        // Apply movement to the player's Rigidbody
         rb.linearVelocity = movement;
     }
 

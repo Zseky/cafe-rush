@@ -9,15 +9,12 @@ public class EmptyTableScript : ObjectScript
 
     public TextMeshPro indicatorText;
 
-    bool tableOccupiedSlot = false;
     
     string tableItemName;
     Sprite tableItemSprite;
 
     [SerializeField] SpriteRenderer tableHolderSprite;
 
-
-    bool showIndicator = false;
 
 
     void Start()
@@ -28,18 +25,16 @@ public class EmptyTableScript : ObjectScript
 
     public override void onUserIndicator()
     {
-        if (showIndicator) base.onUserIndicator();
+        base.onUserIndicator();
     }
 
 
 
     public override void UseButtonFunction()
     {
-        showIndicator = true;
         if (occupiedStatus.occupiedSlot == true)
         {
             
-
             if (tableItemName != null)
             {
                 swapTextActivate();
@@ -56,13 +51,9 @@ public class EmptyTableScript : ObjectScript
 
                 holderItem.occupySlot(swapItemName, swapItemSprite);
 
-               // showIndicator = false;
-
-
             }
             else
             {
-                //showIndicator = true;
                 putTextActivate();
 
                 if (!Input.GetKeyDown(KeyCode.F)) return;
@@ -74,10 +65,6 @@ public class EmptyTableScript : ObjectScript
                 tableItemSprite = occupiedStatus.occupySprite;
 
                 holderItem.emptySlot();
-
-
-
-                //showIndicator = false;
 
             }
         }
@@ -93,14 +80,12 @@ public class EmptyTableScript : ObjectScript
 
                 tableItemName = null;
                 tableItemSprite = null;
-                //showIndicator = false;
             }
-            
 
+            offUserIndicator();
         }
 
         tableHolderSprite.sprite = tableItemSprite;
-        showIndicator = false;
 
 
     }

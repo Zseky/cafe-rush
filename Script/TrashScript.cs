@@ -8,7 +8,7 @@ public class TrashScript : ObjectScript
     public ItemHolderScript occupiedStatus;
 
 
-    bool showIndicator = false;
+
 
 
     void Start()
@@ -19,30 +19,25 @@ public class TrashScript : ObjectScript
 
     public override void onUserIndicator()
     {
-        if (showIndicator) base.onUserIndicator();
+        base.onUserIndicator();
     }
 
 
 
     public override void UseButtonFunction()
     {
-
+        offUserIndicator();
         if (occupiedStatus.occupiedSlot == true)
         {
-            showIndicator = true;
+            onUserIndicator();
+            if (Input.GetKeyDown(KeyCode.F)) 
+            {
+                IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
+                holderItem.emptySlot();
 
-            if (!Input.GetKeyDown(KeyCode.F)) return;
-
-
-            IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
-            holderItem.emptySlot();
-
-            showIndicator = false;
+                offUserIndicator();
+            }
             
-        }
-        else
-        {
-            showIndicator = false;
         }
 
     }
