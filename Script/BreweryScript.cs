@@ -53,6 +53,7 @@ public class BreweryScript : ObjectScript
                     }
                     else
                     {
+                        brewProgress = 0;
                         currentState = State.Get;
                     }
                 }
@@ -70,7 +71,7 @@ public class BreweryScript : ObjectScript
                 {
 
                     IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
-                    holderItem.occupySlot(brewFlavor.itemName, brewFlavor.itemSprite);
+                    holderItem.occupySlot("brew", brewFlavor.itemName, brewFlavor.itemSprite);
                     
                     
                     currentState = State.Reset;
@@ -81,7 +82,6 @@ public class BreweryScript : ObjectScript
 
                 if (Input.GetKeyDown(KeyCode.F))
                 {
-                    brewProgress = 0;
                     UseIndicatorRevert();
                     currentState = State.Brewing;
                 }

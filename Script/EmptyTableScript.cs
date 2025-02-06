@@ -3,108 +3,114 @@ using TMPro;
 
 public class EmptyTableScript : ObjectScript
 {
-    [SerializeField] GameObject itemHolder;
+    [SerializeField] private GameObject itemHolder;
+    [SerializeField] private SpriteRenderer tableHolderSprite;
+    [SerializeField] private TextMeshPro indicatorText;
 
-    public ItemHolderScript occupiedStatus;
+    private ItemHolderScript occupiedStatus;
 
-    public TextMeshPro indicatorText;
-
-    
-    string tableItemName;
-    Sprite tableItemSprite;
-
-    [SerializeField] SpriteRenderer tableHolderSprite;
-
-
+    private string tableItemType;
+    private string tableItemName;
+    private Sprite tableItemSprite;
 
     void Start()
     {
         itemHolder = GameObject.FindGameObjectWithTag("ItemHolder");
-        occupiedStatus = itemHolder.GetComponent<ItemHolderScript>(); 
+        occupiedStatus = itemHolder.GetComponent<ItemHolderScript>();
     }
-
-    public override void onUserIndicator()
-    {
-        base.onUserIndicator();
-    }
-
-
 
     public override void UseButtonFunction()
     {
-        if (occupiedStatus.occupiedSlot == true)
+        if (occupiedStatus.occupiedSlot)
         {
-            
-            if (tableItemName != null)
+            HandleOccupiedSlot();
+        }
+        else
+        {
+            HandleEmptySlot();
+        }
+
+        tableHolderSprite.sprite = tableItemSprite;
+    }
+
+    private void HandleOccupiedSlot()
+    {
+        if (tableItemName != null)
+        {
+            ActivateIndicator("Swap");
+            if (Input.GetKeyDown(KeyCode.F))
             {
-                swapTextActivate();
-                if (!Input.GetKeyDown(KeyCode.F)) return;
-
-
-                IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
-
-                string swapItemName = tableItemName;
-                Sprite swapItemSprite = tableItemSprite;
-
-                tableItemName = occupiedStatus.occupyName;
-                tableItemSprite = occupiedStatus.occupySprite;
-
-                holderItem.occupySlot(swapItemName, swapItemSprite);
-
-            }
-            else
-            {
-                putTextActivate();
-
-                if (!Input.GetKeyDown(KeyCode.F)) return;
-
-
-                IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
-
-                tableItemName = occupiedStatus.occupyName;
-                tableItemSprite = occupiedStatus.occupySprite;
-
-                holderItem.emptySlot();
-
+                SwapItem();
             }
         }
         else
         {
-            if (tableItemName != null)
+            ActivateIndicator("Put");
+            if (Input.GetKeyDown(KeyCode.F))
             {
-
-                getTextActivate();
-                if (!Input.GetKeyDown(KeyCode.F)) return;
-                IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
-                holderItem.occupySlot(tableItemName, tableItemSprite);
-
-                tableItemName = null;
-                tableItemSprite = null;
+                PutItem();
             }
+        }
+    }
 
+    private void HandleEmptySlot()
+    {
+        if (tableItemName != null)
+        {
+            ActivateIndicator("Get");
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                GetItem();
+            }
+        }
+        else
+        {
             offUserIndicator();
         }
-
-        tableHolderSprite.sprite = tableItemSprite;
-
-
     }
 
-    void swapTextActivate()
+    private void SwapItem()
     {
-        indicatorText.text = "Swap";
+        IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
+
+        // Store current table item temporarily
+        var tempType = tableItemType;
+        var tempName = tableItemName;
+        var tempSprite = tableItemSprite;
+
+        // Swap the table item with the held item
+        tableItemType = occupiedStatus.occupyType;
+        tableItemName = occupiedStatus.occupyName;
+        tableItemSprite = occupiedStatus.occupySprite;
+
+        holderItem.occupySlot(tempType, tempName, tempSprite);
     }
 
-    void putTextActivate()
+    private void PutItem()
     {
-        indicatorText.text = "Put";
+        IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
+
+        tableItemType = occupiedStatus.occupyType;
+        tableItemName = occupiedStatus.occupyName;
+        tableItemSprite = occupiedStatus.occupySprite;
+
+        holderItem.emptySlot();
     }
 
-    void getTextActivate()
+    private void GetItem()
     {
-        indicatorText.text = "Get";
+        IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
+        holderItem.occupySlot(tableItemType, tableItemName, tableItemSprite);
+
+        // Clear the table after getting the item
+        tableItemType = null;
+        tableItemName = null;
+        tableItemSprite = null;
     }
 
-
-
+    private void ActivateIndicator(string action)
+    {
+        indicatorText.text = action;
+        onUserIndicator();
+    }
 }

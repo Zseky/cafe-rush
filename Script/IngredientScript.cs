@@ -17,8 +17,6 @@ public class IngredientScript : ObjectScript
         itemHolder = GameObject.FindGameObjectWithTag("ItemHolder");
     }
 
-
-
     public override void UseButtonFunction()
     {
         if (itemHolder.GetComponent<ItemHolderScript>().occupiedSlot) 
@@ -31,7 +29,7 @@ public class IngredientScript : ObjectScript
         if (Input.GetKeyDown(KeyCode.F))
         {
             IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
-            holderItem.occupySlot(ingredientType.itemName, ingredientType.itemSprite);
+            holderItem.occupySlot("ingredient", ingredientType.itemName, ingredientType.itemSprite);
         }
         
        

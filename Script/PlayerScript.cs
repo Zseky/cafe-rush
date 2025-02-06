@@ -77,17 +77,15 @@ public class PlayerScript : MonoBehaviour
             {
                 if (closestInteractable != null)
                 {
-                    closestInteractable.GetComponent<ObjectScript>().offUserIndicator(); // Turn off previous
-
+                    closestInteractable.GetComponent<ObjectScript>().offUserIndicator(); 
                 }
-
                 closestInteractable = collider.gameObject;
-                closestInteractable.GetComponent<ObjectScript>().onUserIndicator(); // Highlight closest
+                closestInteractable.GetComponent<ObjectScript>().onUserIndicator(); 
                 closestDistance = distanceToPlayer;
             }
             else
             {
-                collider.gameObject.GetComponent<ObjectScript>().offUserIndicator(); // Ensure others are off
+                collider.gameObject.GetComponent<ObjectScript>().offUserIndicator(); 
             }
         }
     }

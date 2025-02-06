@@ -7,10 +7,6 @@ public class TrashScript : ObjectScript
 
     public ItemHolderScript occupiedStatus;
 
-
-
-
-
     void Start()
     {
         itemHolder = GameObject.FindGameObjectWithTag("ItemHolder");

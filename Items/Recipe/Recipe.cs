@@ -6,7 +6,10 @@ using UnityEngine;
 public class Recipe : ScriptableObject
 {
     public string itemName;
+    public Sprite rawIcon;
+    public Sprite cookedIcon;
+
     public List<Ingredients> requiredIngredients;
-    public Sprite itemIcon;
+    
     public GameObject cookedPrefab;
 }

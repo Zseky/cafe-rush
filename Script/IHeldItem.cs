@@ -4,7 +4,7 @@ using UnityEngine;
 public interface IHeldItem
 {
 
-    void occupySlot(string itemName, Sprite itemSprite);
+    void occupySlot(string itemType, string itemName, Sprite itemSprite);
     void emptySlot();
 
     

@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d164d7a37e34ecb438f55362019aab2b, type: 3}
   m_Name: croissant
   m_EditorClassIdentifier: 
-  recipeName: croissant
+  itemName: croissant
+  rawIcon: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  cookedIcon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   requiredIngredients:
   - {fileID: 11400000, guid: a9c8cd31211c1b2408dfd1ec0bbf6921, type: 2}
   - {fileID: 11400000, guid: 0b282ad49ea0cde42bc3295624fe0652, type: 2}
-  recipeIcon: {fileID: 0}
   cookedPrefab: {fileID: 0}

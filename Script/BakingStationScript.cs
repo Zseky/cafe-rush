@@ -1,92 +1,140 @@
-using NUnit.Framework;
-using TMPro;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class BakingStationScript:ObjectScript
+public class BakingStationScript : ObjectScript
 {
-    [SerializeField] GameObject RecipePickUI;
-    [SerializeField] TextMeshPro MainText;
+    [SerializeField] private GameObject recipePickUI;
+    [SerializeField] private TextMeshPro mainText;
+    [SerializeField] private GameObject moldIndicator;
 
-    public List<string> ingredientsRequired;
+    private float moldProgress;
+    private ItemHolderScript itemHolder;
+
+    public List<string> ingredientsRequired = new();
     public Recipe chosenRecipe;
 
-    enum State { Bake, Process, Complete }
+    private enum State { Bake, Process, Mold, Complete }
     private State currentState = State.Bake;
-
-
-    private ItemHolderScript itemHolder;
 
     private void Start()
     {
         itemHolder = GameObject.FindGameObjectWithTag("ItemHolder").GetComponent<ItemHolderScript>();
-      
     }
+
+    private void UpdateMoldIndicator()
+    {
+        moldIndicator.SetActive(true);
+        moldIndicator.transform.Find("Slider").GetComponent<Slider>().value = moldProgress;
+    }
+
+    public override void offUserIndicator()
+    {
+        base.offUserIndicator();
+        moldIndicator?.SetActive(false);
+    }
+
+    private void HandleBakeState()
+    {
+        UpdateMainText("Bake");
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            recipePickUI.SetActive(true);
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>().canMove = false;
+            currentState = State.Process;
+        }
+    }
+
+    private void HandleProcessState()
+    {
+        if (recipePickUI.activeSelf) return;
+        UpdateMainText("Put");
+        offUserIndicator();
+
+        if (!ingredientsRequired.Contains(itemHolder.occupyName)) return;
+        onUserIndicator();
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            ingredientsRequired.Remove(itemHolder.occupyName);
+            itemHolder.emptySlot();
+
+            if (ingredientsRequired.Count == 0)
+                currentState = State.Mold;
+        }
+    }
+
+    private void HandleMoldState()
+    {
+        if (Input.GetKey(KeyCode.F))
+        {
+            if (moldProgress < 100)
+            {
+                offUserIndicator();
+                UpdateMoldIndicator();
+                moldProgress += Time.deltaTime * 100f; // Added deltaTime for frame-independent progress
+            }
+            else
+            {
+                moldProgress = 0;
+                currentState = State.Complete;
+                offUserIndicator();
+            }
+        }
+        else
+        {
+            onUserIndicator();
+            moldIndicator.SetActive(false);
+        }
+    }
+
+    private void HandleCompleteState()
+    {
+        if (itemHolder.occupiedSlot)
+        {
+            offUserIndicator();
+            return;
+        }
+
+        UpdateMainText("Get");
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            var holderItem = itemHolder.GetComponent<IHeldItem>();
+            holderItem.occupySlot("recipe", chosenRecipe.itemName, chosenRecipe.rawIcon);
+
+            ResetBakingStation();
+        }
+    }
+
+    private void ResetBakingStation()
+    {
+        chosenRecipe = null;
+        ingredientsRequired.Clear();
+        currentState = State.Bake;
+    }
+
     public override void UseButtonFunction()
     {
         switch (currentState)
         {
             case State.Bake:
-                bakeTextActivate();
-                if (Input.GetKeyDown(KeyCode.F))
-                {
-                    RecipePickUI.gameObject.SetActive(true);
-                    GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>().canMove=false;
-                    currentState = State.Process;
-                }
+                HandleBakeState();
                 break;
             case State.Process:
-                if (RecipePickUI.activeSelf) return;
-                putTextActivate();
-                offUserIndicator();
-                if (!ingredientsRequired.Contains(itemHolder.occupyName)) return;
-                    onUserIndicator();
-                if (Input.GetKeyDown(KeyCode.F))
-                {    
-                    ingredientsRequired.Remove(itemHolder.occupyName);
-                    itemHolder.emptySlot();  
-                    if (ingredientsRequired.Count < 1)
-                    {
-                        currentState = State.Complete;
-                    }
-                   
-                }
+                HandleProcessState();
+                break;
+            case State.Mold:
+                HandleMoldState();
                 break;
             case State.Complete:
-                if (itemHolder.occupiedSlot)
-                {
-                    offUserIndicator();
-                    return; 
-                }
-                    
-                getTextActivate();
-                if (Input.GetKeyDown(KeyCode.F))
-                {
-                    IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
-                    holderItem.occupySlot(chosenRecipe.itemName, chosenRecipe.itemIcon);
-
-                    chosenRecipe = null;
-                    ingredientsRequired.Clear();
-
-                    currentState = State.Bake;
-                }
+                HandleCompleteState();
                 break;
         }
-
     }
 
-    void putTextActivate()
+    private void UpdateMainText(string text)
     {
-        MainText.text = "Put";
-    }
-
-    void bakeTextActivate()
-    {
-        MainText.text = "Bake";
-    }
-
-    void getTextActivate()
-    {
-        MainText.text = "Get";
+        mainText.text = text;
     }
 }
