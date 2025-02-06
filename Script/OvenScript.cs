@@ -9,6 +9,7 @@ public class OvenScript : ObjectScript
 {
     [SerializeField] private List<Recipe> recipes;
     [SerializeField] private GameObject itemHolder;
+    [SerializeField] private TextMeshPro indicatorText;
 
     private Recipe cookedRecipe;
     private float cookTime = 5f;         // Total cook time in seconds
@@ -40,18 +41,17 @@ public class OvenScript : ObjectScript
 
     public override void UseButtonFunction()
     {
-        if (!itemHolder.GetComponent<ItemHolderScript>().occupiedSlot ||
-            itemHolder.GetComponent<ItemHolderScript>().occupyType != "recipe")
-        {
-            offUserIndicator();
-            return;
-        }
-
-        onUserIndicator();
 
         switch (currentState)
         {
             case State.Start:
+                ActivateIndicator("Cook");
+                if (!itemHolder.GetComponent<ItemHolderScript>().occupiedSlot || itemHolder.GetComponent<ItemHolderScript>().occupyType != "recipe")
+                {
+                    offUserIndicator();
+                    return;
+                }
+
                 if (Input.GetKeyDown(KeyCode.F))
                 {
                     IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
@@ -67,12 +67,21 @@ public class OvenScript : ObjectScript
                     }
                 }
                 break;
-
+            case State.Cook:
+                offUserIndicator();
+                break;
             case State.Complete:
+                ActivateIndicator("Get");
+                if (itemHolder.GetComponent<ItemHolderScript>().occupiedSlot)
+                {
+                    offUserIndicator();
+                    return;
+                }
+
                 if (Input.GetKeyDown(KeyCode.F))
                 {
                     IHeldItem holderItem = itemHolder.GetComponent<IHeldItem>();
-                    holderItem.occupySlot("recipe", cookedRecipe.itemName, cookedRecipe.cookedIcon);
+                    holderItem.occupySlot("cooked", cookedRecipe.itemName, cookedRecipe.cookedIcon);
                     currentState = State.Start;  // Reset state after completing
                     Debug.Log("Recipe collected and oven reset.");
                 }
@@ -84,6 +93,13 @@ public class OvenScript : ObjectScript
     {
         currentCookTime = cookTime;   // Initialize the timer
         currentState = State.Cook;    // Change state to Cook, this starts the timer
+        
         Debug.Log("Started Cooking: " + cookedRecipe.itemName);
     }
+    private void ActivateIndicator(string action)
+    {
+        indicatorText.text = action;
+        onUserIndicator();
+    }
+
 }

@@ -968,6 +968,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c199214a54851dc419ff5ce47d87c5a8, type: 2}
   - {fileID: 11400000, guid: 7ad33840d7e03824cbbdc274a5216b38, type: 2}
   itemHolder: {fileID: 0}
+  indicatorText: {fileID: 1065596447}
 --- !u!1001 &547813435
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2984,6 +2985,17 @@ SortingGroup:
   m_SortingLayer: 5
   m_SortingOrder: 1
   m_SortAtRoot: 0
+--- !u!114 &1065596447 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4854327711372864038, guid: c4d4c18c8c17ed348864a896c32a67cd, type: 3}
+  m_PrefabInstance: {fileID: 1065596439}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065596440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1075826510
 GameObject:
   m_ObjectHideFlags: 0
@@ -3985,6 +3997,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UseIndicator: {fileID: 1778740967}
+  itemHolder: {fileID: 0}
+  occupiedStatus: {fileID: 0}
 --- !u!61 &1398173809
 BoxCollider2D:
   m_ObjectHideFlags: 0
